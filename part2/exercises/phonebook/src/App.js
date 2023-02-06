@@ -41,11 +41,10 @@ const PersonForm = ({persons, setPersons}) => {
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setNewName("")
-        setNewNumber("")
       })
 
-    
+    setNewName("")
+    setNewNumber("")
     exists = false
   }
 
