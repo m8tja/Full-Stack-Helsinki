@@ -17,6 +17,7 @@ const PersonForm = ({persons, setPersons}) => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   let exists = false
+  let replace = false
 
   const addPerson = (event) => {
 
@@ -35,12 +36,27 @@ const PersonForm = ({persons, setPersons}) => {
     })
 
     exists ? 
-    alert(`${newName} is already added to the phonebook`) : 
+    (replace = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) : 
     personService
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
       })
+
+    if(replace) {
+
+      const oldPerson = persons.find(p => p.name === personObject.name)
+
+      personService
+        .update(oldPerson.id, personObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== oldPerson.id ? person : returnedPerson))
+        })
+        .catch(error => {
+          alert(`the person ${oldPerson.name} was already deleted from the server`)
+          setPersons(persons.filter(p => p.id !== oldPerson.id))
+        })
+    }
 
     setNewName("")
     setNewNumber("")
