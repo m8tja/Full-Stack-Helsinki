@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios"
+import personService from "./services/persons"
 
 const Filter = ({filter, setFilter}) => {
 
@@ -19,14 +19,15 @@ const PersonForm = ({persons, setPersons}) => {
   let exists = false
 
   const addPerson = (event) => {
+
     event.preventDefault()
 
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
-   
+    
+    
     persons.forEach(person => {
       if(person.name === personObject.name) {
         exists = true
@@ -34,10 +35,17 @@ const PersonForm = ({persons, setPersons}) => {
       }
     })
 
-    exists ? alert(`${newName} is already added to the phonebook`) : setPersons(persons.concat(personObject))
+    exists ? 
+    alert(`${newName} is already added to the phonebook`) : 
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName("")
+        setNewNumber("")
+      })
 
-    setNewName("")
-    setNewNumber("")
+    
     exists = false
   }
 
@@ -85,12 +93,10 @@ const App = () => {
   const [persons, setPersons] = useState([])
 
   useEffect(() => {
-    console.log("effect")
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        console.log("promise fullfiled")
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
