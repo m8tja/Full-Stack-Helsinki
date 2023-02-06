@@ -27,7 +27,6 @@ const PersonForm = ({persons, setPersons}) => {
       number: newNumber,
     }
     
-    
     persons.forEach(person => {
       if(person.name === personObject.name) {
         exists = true
@@ -48,7 +47,6 @@ const PersonForm = ({persons, setPersons}) => {
     exists = false
   }
 
-
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -68,11 +66,20 @@ const PersonForm = ({persons, setPersons}) => {
 
 const Persons = ({persons, setPersons, filter}) => {
 
+  const deletePerson = (id) => {
+    
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+  }
+
   return (
     <ul>
       {persons.map(person => {
         if(person.name.toLowerCase().includes(filter))
-          return <li key={person.id}>{person.name} {person.number}</li>
+          return <li key={person.id}>{person.name} {person.number} <button onClick={() => deletePerson(person.id)}>delete</button></li>
         return null
       })}
     </ul>
