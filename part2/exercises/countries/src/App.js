@@ -24,11 +24,30 @@ const Country = ({countries, filteredCountries, setFilteredCountries, filter}) =
       <p>Too many matches, specify another filter</p>:
       filteredCountries.length === 1 ?
       <CountryDetails country={filteredCountries[0]}/>:
+      <CountryList countries={filteredCountries} filteredCountries={filteredCountries} setFilteredCountries={setFilteredCountries} />
+      }
+    </div>
+  )
+}
+
+const CountryList = ({countries, filteredCountries, setFilteredCountries}) => {
+
+  const [selectedCountry, setSelectedCountry] = useState([])
+
+  const handleClick = (country) => {
+    setFilteredCountries([])
+    setSelectedCountry(country)
+  }
+
+  return (
+    <div>
+      {selectedCountry.length === 0 ?
       <ul>
-        {filteredCountries.map((country, i) => {
-          return <li key={i}>{country.name.common}</li>
+        {countries.map((country, i) => {
+          return <li key={i}>{country.name.common} <button onClick={() => handleClick(country)}>show</button></li>
         })}
-      </ul>
+      </ul> :
+      <CountryDetails country={selectedCountry} />
       }
     </div>
   )
