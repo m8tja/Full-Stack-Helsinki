@@ -1,0 +1,1 @@
+Solutions for part3 exercises can be found in this repository: https://github.com/m8tja/Full-Stack-Helsinki-part3
