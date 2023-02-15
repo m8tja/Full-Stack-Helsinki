@@ -2,8 +2,6 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 
-app.use(cors())
-
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method)
   console.log("Path:", request.path)
@@ -16,6 +14,7 @@ const unknownEndpoint = (request, response) => {
   response.stats(404).send({error: "unknown endpoint"})
 }
 
+app.use(cors())
 app.use(express.json())
 app.use(requestLogger)
 
@@ -48,13 +47,13 @@ app.get("/api/notes", (request, response) => {
 app.get("/api/notes/:id", (request, response) => {
   const id = Number(request.params.id)
   const note = notes.find(note => note.id === id)
+
   if(note) {
     response.json(note)
   }
   else {
     response.status(404).end()
   }
-  
 })
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -72,7 +71,7 @@ const generateId = () => {
   return maxId + 1
 }
 
-app.post("/app/notes", (request, response) => {
+app.post("/api/notes", (request, response) => {
   const body = request.body
 
   if(!body.content) {
