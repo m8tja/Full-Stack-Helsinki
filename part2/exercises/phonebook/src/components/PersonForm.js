@@ -38,6 +38,15 @@ const PersonForm = ({persons, setPersons, setErrorMessage, setErrorType}) => {
           setErrorMessage(null)
         }, 5000)
       })
+      .catch(error => {
+        setErrorMessage(
+          error.response.data.error
+        )
+        setErrorType("red")
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
 
     if(replace) {
 
