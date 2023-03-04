@@ -72,17 +72,17 @@ test("dummy returns one", () => {
 
 describe("total likes", () => {
 
-  test("when list has only one blog, equals the likes of that", () => {
-    const result = listHelper.totalLikes(listWithOneBlog)
-    expect(result).toBe(5)
-  })
-
   test("when the list has no blogs, equals to zero", () => {
     const result = listHelper.totalLikes(noBlogs)
     expect(result).toBe(0)
   })
 
-  test("when list has many blogs, equals the sum of all likes", () => {
+  test("when the list has only one blog, equals to the likes of that", () => {
+    const result = listHelper.totalLikes(listWithOneBlog)
+    expect(result).toBe(5)
+  })
+
+  test("when the list has many blogs, equals to the sum of all likes", () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
   })
@@ -90,17 +90,17 @@ describe("total likes", () => {
 
 describe("favorite blog", () => {
 
-  test("when list has only one blog, that blog is the favorite blog", () => {
-    const result = listHelper.favoriteBlog(listWithOneBlog)
-    expect(result).toEqual(listWithOneBlog[0])
-  })
-
-  test("when list has no blogs, there are no favorite blogs", () => {
+  test("when the list has no blogs, there are no favorite blogs", () => {
     const result = listHelper.favoriteBlog(noBlogs)
     expect(result).toEqual([])
   })
 
-  test("when list has many blogs, equals to the blog with the most likes", () => {
+  test("when the list has only one blog, that blog is the favorite blog", () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    expect(result).toEqual(listWithOneBlog[0])
+  })
+
+  test("when the list has many blogs, equals to the blog with the most likes", () => {
     const result = listHelper.favoriteBlog(blogs)
     expect(result).toEqual(
       {
@@ -110,6 +110,32 @@ describe("favorite blog", () => {
         url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
         likes: 12,
         __v: 0
+    })
+  })
+})
+
+describe("most blogs", () => {
+  
+  test("when the list has no blogs, there is no author with most blogs", () => {
+    const result = listHelper.mostBlogs(noBlogs)
+    expect(result).toEqual([])
+  })
+
+  test("when the list has only one blog, the author of that blog has the most blogs", () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual(
+      {
+        author: "Edsger W. Dijkstra",
+        blogs: 1
+      }
+    )
+  })
+
+  test("when the list has many blogs, equals to the author who has the most blogs", () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: "Robert C. Martin",
+      blogs: 3
     })
   })
 })
