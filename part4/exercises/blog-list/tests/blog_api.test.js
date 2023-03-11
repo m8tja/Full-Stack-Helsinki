@@ -58,6 +58,24 @@ test("a blog can be added", async () => {
     )
 })
 
+test("a blog with no likes has 0 likes", async () => {
+  const newBlog = {
+    title: "Loopy",
+    author: "Robert C. Martin",
+    url: "https://blog.cleancoder.com/uncle-bob/2020/09/30/loopy.html"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+
+  const savedBlog = await helper.blogInDb(newBlog.title, newBlog.url)
+
+  expect(savedBlog.likes).toEqual(0)
+})
+
 test("a blog can be updated", async () => {
   const blogs = await helper.blogsInDb()
   const blogToUpdate = blogs[0]
