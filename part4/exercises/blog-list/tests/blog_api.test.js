@@ -8,7 +8,7 @@ const Blog = require("../models/blog")
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.blogs)
+  await Blog.insertMany(helper.blogsList)
 })
 
 test("blogs are returned as json", async () => {
@@ -17,7 +17,7 @@ test("blogs are returned as json", async () => {
     .expect(200)
     .expect("Content-Type", /application\/json/)
 
-  expect(returnedBlogs.body).toHaveLength(helper.blogs.length)
+  expect(returnedBlogs.body).toHaveLength(helper.blogsList.length)
 }, 100000)
 
 test("blog has property id and not _id", async () => {
@@ -45,7 +45,7 @@ test("a blog can be added", async () => {
     .expect("Content-Type", /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.blogs.length + 1)
+    expect(blogsAtEnd).toHaveLength(helper.blogsList.length + 1)
 
     const title = blogsAtEnd.map(b => b.title)
     expect(title).toContain(
@@ -56,6 +56,29 @@ test("a blog can be added", async () => {
     expect(author).toContain(
       "Robert C. Martin"
     )
+})
+
+test("a blog can be updated", async () => {
+  const blogs = await helper.blogsInDb()
+  const blogToUpdate = blogs[0]
+
+  const updatedBlog = {
+    title: blogToUpdate.title,
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
+    likes: blogToUpdate.likes + 1
+  }
+
+  await api
+    .put(`/api/blogs/${blogs[0].id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  const blogsAfter = await helper.blogsInDb()
+
+  const likes = blogsAfter.map(b => b.likes)
+
+  expect(likes[0]).toBe(updatedBlog.likes)
 })
 
 test("a blog can be deleted", async () => {
@@ -69,7 +92,7 @@ test("a blog can be deleted", async () => {
   const blogsAtEnd = await helper.blogsInDb()
 
   expect(blogsAtEnd).toHaveLength(
-    helper.blogs.length - 1
+    helper.blogsList.length - 1
   )
 
   const titles = blogsAtEnd.map(b => b.title)
