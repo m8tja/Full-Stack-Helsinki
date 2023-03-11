@@ -76,6 +76,30 @@ test("a blog with no likes has 0 likes", async () => {
   expect(savedBlog.likes).toEqual(0)
 })
 
+test("a blog with no title cannot be posted", async () => {
+  const newBlog = {
+    author: "Robert C. Martin",
+    url: "https://blog.cleancoder.com/uncle-bob/2020/09/30/loopy.html"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(400)
+})
+
+test("a blog with no url cannot be posted", async () => {
+  const newBlog = {
+    title: "Loopy",
+    author: "Robert C. Martin"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(400)
+})
+
 test("a blog can be updated", async () => {
   const blogs = await helper.blogsInDb()
   const blogToUpdate = blogs[0]

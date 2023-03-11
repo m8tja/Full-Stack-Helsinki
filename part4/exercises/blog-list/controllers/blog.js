@@ -13,8 +13,13 @@ blogRouter.post("/", async (request, response) => {
     blog.likes = 0
   }
 
-  const savedBlog = await blog.save()
-  response.status(201).json(savedBlog)
+  if(!blog.url || !blog.title) {
+    response.status(400).end()
+  }
+  else {
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog)
+  }
 })
 
 blogRouter.put("/:id", async (request, response) => {
