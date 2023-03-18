@@ -5,10 +5,13 @@ const app = require("../app")
 const api = supertest(app)
 
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.blogsList)
+  await User.deleteMany({})
+  await User.insertMany(helper.userList)
 })
 
 test("blogs are returned as json", async () => {
@@ -26,7 +29,7 @@ test("blog has property id and not _id", async () => {
     .expect(200)
     .expect("Content-Type", /application\/json/)
 
-  console.log(returnedBlogs)
+  //console.log(returnedBlogs)
   expect(returnedBlogs.body[0].id).toBeDefined()
 })
 
@@ -140,6 +143,104 @@ test("a blog can be deleted", async () => {
   const titles = blogsAtEnd.map(b => b.title)
 
   expect(titles).not.toContain(blogToDelete.title)
+})
+
+test("user with a password that is too short, is not added", async () => {
+  const user = {
+    username: "edijkstra",
+    name: "Edsger Dijkstra",
+    password: "ed"
+  }
+
+  const initialUsersInDb = await helper.usersInDb()
+
+  const response = await api
+    .post("/api/users")
+    .send(user)
+    .expect(403)
+
+  const usersinDbAfter = await helper.usersInDb()
+
+  expect(usersinDbAfter.length).toEqual(initialUsersInDb.length)
+  expect(response.body.error).toContain("User validation failed: password: Path `password` is too short.")
+})
+
+test("user with a username that is too short, is not added", async () => {
+  const user = {
+    username: "ed",
+    name: "Edsger Dijkstra",
+    password: "dijkstra"
+  }
+
+  const initialUsersInDb = await helper.usersInDb()
+
+  const response = await api
+    .post("/api/users")
+    .send(user)
+    .expect(400)
+
+  const usersinDbAfter = await helper.usersInDb()
+
+  expect(usersinDbAfter.length).toEqual(initialUsersInDb.length)
+  expect(response.body.error).toContain("User validation failed: username: Path `username` (`ed`) is shorter than the minimum allowed length (3).")
+})
+
+test("user with no username, is not added", async () => {
+  const user = {
+    name: "Edsger Dijkstra",
+    password: "dijkstra"
+  }
+
+  const initialUsersInDb = await helper.usersInDb()
+
+  const response = await api
+    .post("/api/users")
+    .send(user)
+    .expect(400)
+
+  const usersinDbAfter = await helper.usersInDb()
+
+  expect(usersinDbAfter.length).toEqual(initialUsersInDb.length)
+  expect(response.body.error).toContain("User validation failed: username: Path `username` is required.")
+})
+
+test("user with no password, is not added", async () => {
+  const user = {
+    username: "edijkstra",
+    name: "Edsger Dijkstra"
+  }
+
+  const initialUsersInDb = await helper.usersInDb()
+
+  const response = await api
+    .post("/api/users")
+    .send(user)
+    .expect(400)
+
+  const usersinDbAfter = await helper.usersInDb()
+
+  expect(usersinDbAfter.length).toEqual(initialUsersInDb.length)
+  expect(response.body.error).toContain("User validation failed: password: Path `password` is required.")
+})
+
+test("user with the same username, is not added", async () => {
+  const user = {
+    username: "hellas",
+    name: "Matti Hellas",
+    password: "salainen"
+  }
+
+  const initialUsersInDb = await helper.usersInDb()
+
+  const response = await api
+    .post("/api/users")
+    .send(user)
+    .expect(400)
+
+  const usersinDbAfter = await helper.usersInDb()
+
+  expect(usersinDbAfter.length).toEqual(initialUsersInDb.length)
+  expect(response.body.error).toContain("username already exists")
 })
 
 afterAll(async () => {

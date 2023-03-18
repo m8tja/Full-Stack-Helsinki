@@ -11,6 +11,14 @@ usersRotuer.get("/", async (request, response) => {
 usersRotuer.post("/", async (request, response) => {
   const { username, name, password } = request.body
 
+  if (!password) {
+    return response.status(400).json({ error: "User validation failed: password: Path `password` is required." })
+  }
+
+  if (password.length < 3) {
+    return response.status(403).json({ error: "User validation failed: password: Path `password` is too short." })
+  }
+
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
