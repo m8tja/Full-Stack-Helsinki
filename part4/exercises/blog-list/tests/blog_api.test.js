@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const bcrypt = require("bcrypt")
 const helper = require("./test_helper")
 const app = require("../app")
 const api = supertest(app)
@@ -10,8 +11,22 @@ const User = require("../models/user")
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.blogsList)
+  
   await User.deleteMany({})
-  await User.insertMany(helper.userList)
+  
+  for (let i = 0; i < helper.userList.length; i++) {
+    const user = helper.userList[i]
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(user.password, saltRounds)
+
+    const newUser = new User({
+      username: user.username, 
+      name: user.name, 
+      passwordHash: passwordHash
+    })
+
+    await User.create(newUser)
+  }
 })
 
 test("blogs are returned as json", async () => {
@@ -41,9 +56,16 @@ test("a blog can be added", async () => {
     likes: 4,
   }
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set('Authorization', `Bearer ${token}`)
     .expect(201)
     .expect("Content-Type", /application\/json/)
 
@@ -68,9 +90,16 @@ test("a blog with no likes has 0 likes", async () => {
     url: "https://blog.cleancoder.com/uncle-bob/2020/09/30/loopy.html"
   }
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set('Authorization', `Bearer ${token}`)
     .expect(201)
     .expect("Content-Type", /application\/json/)
 
@@ -85,9 +114,16 @@ test("a blog with no title cannot be posted", async () => {
     url: "https://blog.cleancoder.com/uncle-bob/2020/09/30/loopy.html"
   }
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set('Authorization', `Bearer ${token}`)
     .expect(400)
 })
 
@@ -97,9 +133,16 @@ test("a blog with no url cannot be posted", async () => {
     author: "Robert C. Martin"
   }
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set('Authorization', `Bearer ${token}`)
     .expect(400)
 })
 
@@ -114,9 +157,16 @@ test("a blog can be updated", async () => {
     likes: blogToUpdate.likes + 1
   }
 
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
   await api
     .put(`/api/blogs/${blogs[0].id}`)
     .send(updatedBlog)
+    .set('Authorization', `Bearer ${token}`)
     .expect(200)
 
   const blogsAfter = await helper.blogsInDb()
@@ -127,22 +177,38 @@ test("a blog can be updated", async () => {
 })
 
 test("a blog can be deleted", async () => {
-  const blogs = await helper.blogsInDb()
-  const blogToDelete = blogs[0]
+  const newBlog = {
+    title: "The Clean Code Blog",
+    author: "Robert C. Martin",
+    url: "https://blog.cleancoder.com/uncle-bob/2017/03/16/DrCalvin.html",
+    likes: 4,
+  }
+
+  const blogsBefore = await helper.blogsInDb()
+
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: helper.userList[0].username, password: helper.userList[0].password })
+
+  const token = loginResponse.body.token
+
+  const addedBlog = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
 
   await api
-    .delete(`/api/blogs/${blogToDelete.id}`)
+    .delete(`/api/blogs/${addedBlog.body.id}`)
+    .set('Authorization', `Bearer ${token}`)
     .expect(204)
 
   const blogsAtEnd = await helper.blogsInDb()
-
-  expect(blogsAtEnd).toHaveLength(
-    helper.blogsList.length - 1
-  )
+  expect(blogsAtEnd).toHaveLength(blogsBefore.length)
 
   const titles = blogsAtEnd.map(b => b.title)
-
-  expect(titles).not.toContain(blogToDelete.title)
+  expect(titles).not.toContain(newBlog.title)
 })
 
 test("user with a password that is too short, is not added", async () => {

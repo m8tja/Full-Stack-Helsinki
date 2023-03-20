@@ -54,9 +54,14 @@ const blogsList = [
 
 const userList = [
   {
+    username: "tester",
+    name: "Test User",
+    password: "tester"
+  },
+  {
     username: "hellas",
-    name: "Arto Hellas",
-    passwordHash: "salainen"
+    name: "Matti Hellas",
+    password: "salainen"
   }
 ]
 
