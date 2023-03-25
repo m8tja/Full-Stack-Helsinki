@@ -23,6 +23,16 @@ const App = () => {
       })
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser")
+
+    if(loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, []) // [] means that the effect is executed only when the component is rendered for the first time
+
   const addNote = (event) => {
 
     event.preventDefault()
@@ -79,6 +89,10 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
+
+      window.localStorage.setItem(
+        "loggedNoteAppUser", JSON.stringify(user)
+      )
 
       noteService.setToken(user.token)
       setUser(user)
