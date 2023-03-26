@@ -5,6 +5,9 @@ import loginService from "./services/login"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [newBlogTitle, setNewBlogTitle] = useState("")
+  const [newBlogAuthor, setNewBlogAuthor] = useState("")
+  const [newBlogUrl, setNewBlogUrl] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
@@ -24,6 +27,37 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    const blogObject = {
+      title: newBlogTitle,
+      author: newBlogAuthor,
+      url: newBlogUrl
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewBlogTitle("")
+        setNewBlogAuthor("")
+        setNewBlogUrl("")
+      })
+  }
+
+  const handleTitleChange = (event) => {
+    setNewBlogTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewBlogAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setNewBlogUrl(event.target.value)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -82,6 +116,21 @@ const App = () => {
         <p>{user.name} logged in <button type='submit'>Log out</button></p>
       </form>
       <h2>Create new</h2>
+      <form onSubmit={addBlog}>
+        <div>
+        <div>
+          title:  
+          <input type="text" value={newBlogTitle} onChange={handleTitleChange}/>
+        </div>
+        <div>
+          author:  
+          <input type="text" value={newBlogAuthor} onChange={handleAuthorChange}/>
+        </div>
+          url:  
+          <input type="text" value={newBlogUrl} onChange={handleUrlChange}/>
+        </div>
+        <button type="submit">create</button>
+      </form>
       <h2>Blogs</h2>
       {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
