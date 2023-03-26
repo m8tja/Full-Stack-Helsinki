@@ -33,6 +33,10 @@ const App = () => {
         username, password
       })
 
+      window.localStorage.setItem(
+        "loggedBlogAppUser", JSON.stringify(user)
+      )
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername("")
@@ -77,6 +81,7 @@ const App = () => {
       <form onSubmit={handleLogout}>
         <p>{user.name} logged in <button type='submit'>Log out</button></p>
       </form>
+      <h2>Create new</h2>
       <h2>Blogs</h2>
       {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
