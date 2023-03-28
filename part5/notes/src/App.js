@@ -5,6 +5,8 @@ import Footer from "./components/Footer"
 import LoginForm from "./components/LoginForm"
 import noteService from "./services/notes"
 import loginService from "./services/login"
+import Toggable from "./components/Toggable"
+import NoteForm from "./components/NoteForm"
 
 const App = () => {
 
@@ -15,7 +17,6 @@ const App = () => {
   const [username, setUsername] = useState("") 
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -74,11 +75,11 @@ const App = () => {
       })
   }
 
+  /*
   const handleNoteChange = (event) => {
-
-    console.log(event.target.value)
     setNewNote(event.target.value)
   }
+  */
 
   const notesToShow = showAll
     ? notes
@@ -108,36 +109,6 @@ const App = () => {
       }, 5000)
     }
   }
-
-  const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? "none" : "" }
-    const showWhenVisible = { display: loginVisible ? "" : "none" }
-
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value) }
-            handlePasswordChange={({ target }) => setPassword(target.value) }
-            handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange}/>
-      <button type="submit">save</button>
-    </form>
-  )
   
   /* *** could be replaced by conditional ***
   {user === null && loginForm()}
@@ -154,12 +125,28 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      {!user && loginForm()}
-      {user && <div>
-        <p>{user.name} logged in</p>
-        {noteForm()}
-        </div>  
+
+      {!user && 
+        <Toggable buttonLabel="log in">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Toggable>
       }
+
+      {user &&
+        <div>
+          <p>{user.name} logged in</p>
+          <Toggable buttonLabel="new note">
+            <NoteForm createNote={addNote} />
+          </Toggable>
+        </div>
+      }
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "important" : "all" }
