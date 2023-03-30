@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import { useState, useEffect, useRef } from "react"
 import Note from "./components/Note"
 import Notification from "./components/Notification"
 import Footer from "./components/Footer"
@@ -16,6 +16,7 @@ const App = () => {
   const [username, setUsername] = useState("") 
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
+  const noteFormRef = useRef()
 
   useEffect(() => {
     noteService
@@ -36,6 +37,7 @@ const App = () => {
   }, []) // [] means that the effect is executed only when the component is rendered for the first time
 
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
       .then(returnedNote => {
@@ -130,7 +132,7 @@ const App = () => {
       {user &&
         <div>
           <p>{user.name} logged in</p>
-          <Toggable buttonLabel="new note">
+          <Toggable buttonLabel="new note" ref={noteFormRef}>
             <NoteForm createNote={addNote} />
           </Toggable>
         </div>
