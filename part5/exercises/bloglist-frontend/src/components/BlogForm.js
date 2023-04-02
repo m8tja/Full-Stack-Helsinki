@@ -1,22 +1,54 @@
+import { useState } from "react"
+
 const BlogForm = ({ 
-  handleLogout, 
-  user, 
   hideWhenVisible, 
   setblogFormVisible,
   showWhenVisible,
-  addBlog,
-  newBlogTitle,
-  handleTitleChange,
-  newBlogAuthor,
-  handleAuthorChange,
-  newBlogUrl,
-  handleUrlChange
+  createBlog,
+  setErrorType,
+  setErrorMessage
  }) => {
+
+  const [newBlogTitle, setNewBlogTitle] = useState("")
+  const [newBlogAuthor, setNewBlogAuthor] = useState("")
+  const [newBlogUrl, setNewBlogUrl] = useState("")
+
+  const handleTitleChange = (event) => {
+    setNewBlogTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewBlogAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setNewBlogUrl(event.target.value)
+  }
+
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    createBlog({
+      title: newBlogTitle,
+      author: newBlogAuthor,
+      url: newBlogUrl
+    })
+
+    setErrorType("green")
+    setErrorMessage(
+      `A new blog ${newBlogTitle} by ${newBlogAuthor} added`
+    )
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+
+    setNewBlogTitle("")
+    setNewBlogAuthor("")
+    setNewBlogUrl("")
+  }
+
   return (
     <div>
-      <form onSubmit={handleLogout}>
-        <p>{user.name} logged in <button type='submit'>Log out</button></p>
-      </form>
       <button style={hideWhenVisible} onClick={() => setblogFormVisible(true)}>new blog</button>
       <div style={showWhenVisible}>
         <h2>Create new</h2>

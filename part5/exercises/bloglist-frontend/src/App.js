@@ -7,9 +7,6 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlogTitle, setNewBlogTitle] = useState("")
-  const [newBlogAuthor, setNewBlogAuthor] = useState("")
-  const [newBlogUrl, setNewBlogUrl] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
@@ -33,44 +30,12 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (event) => {
-    event.preventDefault()
-
-    const blogObject = {
-      title: newBlogTitle,
-      author: newBlogAuthor,
-      url: newBlogUrl
-    }
-
+  const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-
-        setErrorType("green")
-        setErrorMessage(
-          `A new blog ${newBlogTitle} by ${newBlogAuthor} added`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-
-        setNewBlogTitle("")
-        setNewBlogAuthor("")
-        setNewBlogUrl("")
       })
-  }
-
-  const handleTitleChange = (event) => {
-    setNewBlogTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewBlogAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewBlogUrl(event.target.value)
   }
 
   const handleLogin = async (event) => {
@@ -133,19 +98,16 @@ const App = () => {
 
   const blogForm = () => (
     <div>
+      <form onSubmit={handleLogout}>
+        <p>{user.name} logged in <button type='submit'>Log out</button></p>
+      </form>
       <BlogForm 
-        handleLogout={handleLogout}
-        user={user}
         hideWhenVisible={hideWhenVisible}
         setblogFormVisible={setblogFormVisible}
         showWhenVisible={showWhenVisible}
-        addBlog={addBlog}
-        newBlogTitle={newBlogTitle}
-        newBlogAuthor={newBlogAuthor}
-        newBlogUrl={newBlogUrl}
-        handleAuthorChange={handleAuthorChange}
-        handleTitleChange={handleTitleChange}
-        handleUrlChange={handleUrlChange}
+        createBlog={addBlog}
+        setErrorType={setErrorType}
+        setErrorMessage={setErrorMessage}
       />
       {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
