@@ -3,7 +3,7 @@ import { useState } from "react"
 const Blog = ({blog}) => {
  
   const [fullBlogVisible, setFullBlogVisible] = useState(false)
-
+  
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -24,6 +24,9 @@ const Blog = ({blog}) => {
       </div>
       <div style={showWhenVisible}>
         likes {blog.likes} <button>like</button>
+      </div>
+      <div style={showWhenVisible}>
+        {blog.user.name}
       </div>
     </div> 
   )
