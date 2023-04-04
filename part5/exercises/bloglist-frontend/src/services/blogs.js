@@ -27,5 +27,11 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
+const deleteBlog = async (id, user) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
+  const response = await axios.delete(`${baseUrl}/${id}`)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, deleteBlog, setToken }
