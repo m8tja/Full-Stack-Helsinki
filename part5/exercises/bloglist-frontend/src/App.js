@@ -117,7 +117,7 @@ const App = () => {
         setErrorType={setErrorType}
         setErrorMessage={setErrorMessage}
       />
-      {blogs.map(blog =>
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
         <Blog key={blog.id} blog={blog} likeBlog={addLike}/>
       )}
     </div>
