@@ -34,4 +34,6 @@ Toggable.propTypes = {
   buttonLabel: PropTypes.string.isRequired
 }
 
+Toggable.displayName = "Toggable"
+
 export default Toggable
