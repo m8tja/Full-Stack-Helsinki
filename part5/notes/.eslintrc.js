@@ -1,8 +1,9 @@
+/* eslint-env node */
 module.exports = {
   "env": {
     "browser": true,
-    "jest/globals": true,
-    "node": true
+    "es6": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
