@@ -1,13 +1,13 @@
 import { useState } from "react"
 
-const BlogForm = ({ 
-  hideWhenVisible, 
+const BlogForm = ({
+  hideWhenVisible,
   setblogFormVisible,
   showWhenVisible,
   createBlog,
   setErrorType,
   setErrorMessage
- }) => {
+}) => {
 
   const [newBlogTitle, setNewBlogTitle] = useState("")
   const [newBlogAuthor, setNewBlogAuthor] = useState("")
@@ -54,16 +54,18 @@ const BlogForm = ({
         <h2>Create new</h2>
         <form onSubmit={addBlog}>
           <div>
-          <div>
-            title:  
-            <input type="text" value={newBlogTitle} onChange={handleTitleChange}/>
-          </div>
-          <div>
-            author:  
-            <input type="text" value={newBlogAuthor} onChange={handleAuthorChange}/>
-          </div>
-            url:  
-            <input type="text" value={newBlogUrl} onChange={handleUrlChange}/>
+            <div>
+              title:
+              <input type="text" value={newBlogTitle} onChange={handleTitleChange}/>
+            </div>
+            <div>
+              author:
+              <input type="text" value={newBlogAuthor} onChange={handleAuthorChange}/>
+            </div>
+            <div>
+              url:
+              <input type="text" value={newBlogUrl} onChange={handleUrlChange}/>
+            </div>
           </div>
           <button type="submit">create</button>
         </form>

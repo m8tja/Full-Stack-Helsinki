@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import Notification from './components/Notification'
-import blogService from './services/blogs'
+import { useState, useEffect } from "react"
+import Blog from "./components/Blog"
+import Notification from "./components/Notification"
+import blogService from "./services/blogs"
 import loginService from "./services/login"
-import BlogForm from './components/BlogForm'
+import BlogForm from "./components/BlogForm"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -49,10 +49,10 @@ const App = () => {
   const deleteBlog = (id, blog) => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       blogService
-      .deleteBlog(id, user)
-      .then(() => {
-        setBlogs(blogs.filter(blog => blog.id !== id))
-      })
+        .deleteBlog(id, user)
+        .then(() => {
+          setBlogs(blogs.filter(blog => blog.id !== id))
+        })
     }
   }
 
@@ -119,7 +119,7 @@ const App = () => {
       <form onSubmit={handleLogout}>
         <p>{user.name} logged in <button type='submit'>Log out</button></p>
       </form>
-      <BlogForm 
+      <BlogForm
         hideWhenVisible={hideWhenVisible}
         setblogFormVisible={setblogFormVisible}
         showWhenVisible={showWhenVisible}
