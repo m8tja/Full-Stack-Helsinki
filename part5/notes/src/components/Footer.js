@@ -1,5 +1,5 @@
 const Footer = () => {
-  
+
   const footerStyle = {
     color: "green",
     fontStyle: "italic",
