@@ -78,7 +78,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username, password
@@ -100,7 +100,7 @@ const App = () => {
       }, 5000)
     }
   }
-  
+
   /* *** could be replaced by conditional ***
   {user === null && loginForm()}
   {user !== null && noteForm()}
@@ -155,6 +155,6 @@ const App = () => {
       <Footer /> 
     </div>
   )
-}
+} 
 
 export default App

@@ -1,5 +1,5 @@
-const Notification = ({message}) => {
-  if (message == null) {
+const Notification = ({ message }) => {
+  if (message === null) {
     return null
   }
 
