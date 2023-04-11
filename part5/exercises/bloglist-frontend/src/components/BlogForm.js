@@ -56,18 +56,18 @@ const BlogForm = ({
           <div>
             <div>
               title:
-              <input type="text" value={newBlogTitle} onChange={handleTitleChange}/>
+              <input type="text" value={newBlogTitle} onChange={handleTitleChange} id="title"/>
             </div>
             <div>
               author:
-              <input type="text" value={newBlogAuthor} onChange={handleAuthorChange}/>
+              <input type="text" value={newBlogAuthor} onChange={handleAuthorChange} id="author"/>
             </div>
             <div>
               url:
-              <input type="text" value={newBlogUrl} onChange={handleUrlChange}/>
+              <input type="text" value={newBlogUrl} onChange={handleUrlChange} id="url"/>
             </div>
           </div>
-          <button type="submit">create</button>
+          <button type="submit" id="create">create</button>
         </form>
         <button onClick={() => setblogFormVisible(false)}>cancel</button>
       </div>

@@ -55,5 +55,6 @@ test("if the button is clicked twice, the function is called twice", async () =>
   await user.click(button)
   await user.click(button)
 
-  expect(likeBlog).toHaveBeenCalledTimes(2)
+  expect(likeBlog.mock.calls).toHaveLength(2)
+  //expect(likeBlog).toHaveBeenCalledTimes(2)
 })
