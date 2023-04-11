@@ -44,3 +44,16 @@ test("after clicking the button, url and likes are displayed", async () => {
   const divLikes = container.querySelector(".likes")
   expect(divLikes).toHaveStyle("display: block")
 })
+
+test("if the button is clicked twice, the function is called twice", async () => {
+  const likeBlog = jest.fn()
+  const user = userEvent.setup()
+
+  render(<Blog blog={blog} user={user} likeBlog={likeBlog}/>)
+
+  const button = screen.getByText("like")
+  await user.click(button)
+  await user.click(button)
+
+  expect(likeBlog).toHaveBeenCalledTimes(2)
+})
