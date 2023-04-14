@@ -38,11 +38,11 @@ const App = () => {
   }, []) // [] means that the effect is executed only when the component is rendered for the first time
 
   const addNote = (noteObject) => {
-    noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
+        noteFormRef.current.toggleVisibility()
       })
   }
 
