@@ -39,4 +39,23 @@ describe("Blog app", function() {
       cy.get("#error-message").should("have.css", "color", "rgb(255, 0, 0)")
     })
   })
+
+  describe("When logged in", function() {
+    beforeEach(function() {
+      cy.login({ username: "mcerina", password: "salainen" })
+    })
+
+    it("A blog can be created", function() {
+      cy.get("#new-blog-button").click()
+      cy.get("#title").type("Cypress testing")
+      cy.get("#author").type("Mateja Cerina")
+      cy.get("#url").type("www.testingblogswithcypress.com")
+      cy.get("#create").click()
+
+      cy.contains("A new blog Cypress testing by Mateja Cerina added")
+      cy.get("#error-message").should("have.css", "color", "rgb(0, 128, 0)")
+      cy.contains("Cypress testing Mateja Cerina")
+      cy.contains("view")
+    })
+  })
 })

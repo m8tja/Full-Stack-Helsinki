@@ -49,7 +49,7 @@ const BlogForm = ({
 
   return (
     <div>
-      <button style={hideWhenVisible} onClick={() => setblogFormVisible(true)}>new blog</button>
+      <button id="new-blog-button" style={hideWhenVisible} onClick={() => setblogFormVisible(true)}>new blog</button>
       <div style={showWhenVisible}>
         <h2>Create new</h2>
         <form onSubmit={addBlog}>
