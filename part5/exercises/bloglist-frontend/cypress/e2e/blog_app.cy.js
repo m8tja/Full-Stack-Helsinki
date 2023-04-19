@@ -57,5 +57,18 @@ describe("Blog app", function() {
       cy.contains("Cypress testing Mateja Cerina")
       cy.contains("view")
     })
+
+    it("A blog can be liked", function() {
+      cy.get("#new-blog-button").click()
+      cy.get("#title").type("Cypress testing")
+      cy.get("#author").type("Mateja Cerina")
+      cy.get("#url").type("www.testingblogswithcypress.com")
+      cy.get("#create").click()
+      cy.get("#view-button").click()
+
+      cy.contains("likes 0")
+      cy.get("#like-button").click()
+      cy.contains("likes 1")
+    })
   })
 })
