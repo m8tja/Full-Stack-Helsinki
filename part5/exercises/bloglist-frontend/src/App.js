@@ -117,7 +117,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <form onSubmit={handleLogout}>
-        <p>{user.name} logged in <button type='submit'>Log out</button></p>
+        <p>{user.name} logged in <button id="logout-button" type='submit'>Log out</button></p>
       </form>
       <BlogForm
         hideWhenVisible={hideWhenVisible}

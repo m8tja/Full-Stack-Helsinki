@@ -9,6 +9,13 @@ describe("Blog app", function() {
     }
     cy.request("POST", "http://localhost:3003/api/users", user)
 
+    const user2 = {
+      name: "Ibsy Cerina",
+      username: "icerina",
+      password: "salainen"
+    }
+    cy.request("POST", "http://localhost:3003/api/users", user2)
+
     cy.visit("http://localhost:3000")
   })
 
@@ -57,18 +64,37 @@ describe("Blog app", function() {
       cy.contains("Cypress testing Mateja Cerina")
       cy.contains("view")
     })
+  })
 
-    it("A blog can be liked", function() {
+  describe("When a blog is created", function() {
+    beforeEach(function() {
+      cy.login({ username: "mcerina", password: "salainen" })
       cy.get("#new-blog-button").click()
       cy.get("#title").type("Cypress testing")
       cy.get("#author").type("Mateja Cerina")
       cy.get("#url").type("www.testingblogswithcypress.com")
       cy.get("#create").click()
-      cy.get("#view-button").click()
+    })
 
+    it("A blog can be liked", function() {
+      cy.get("#view-button").click()
       cy.contains("likes 0")
       cy.get("#like-button").click()
       cy.contains("likes 1")
+    })
+
+    it("A blog can be deleted by the user who created it", function() {
+      cy.get("#view-button").click()
+      cy.get("#delete-button").click()
+      cy.get("html").should("not.contain", "Cypress testing Mateja Cerina")
+    })
+
+    it("A blog can't be deleted by a user that didn't create it", function() {
+      cy.get("#logout-button").click()
+      cy.login({ username: "icerina", password: "salainen" })
+      cy.contains("Cypress testing Mateja Cerina")
+      cy.get("#view-button").click()
+      cy.get("#delete-button").should("have.css", "display", "none")
     })
   })
 })

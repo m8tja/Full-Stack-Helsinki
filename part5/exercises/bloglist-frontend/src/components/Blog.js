@@ -51,7 +51,7 @@ const Blog = ({ user, blog, likeBlog, delBlog }) => {
       <div style={showWhenVisible} className="user">
         {blog.user.name}
       </div>
-      <button style={showDelete} onClick={deleteBlog}>delete</button>
+      <button id="delete-button" style={showDelete} onClick={deleteBlog}>delete</button>
     </div>
   )
 }
