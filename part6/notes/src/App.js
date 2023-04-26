@@ -2,7 +2,7 @@ import { createStore } from "redux"
 import noteReducer from "./reducers/noteReducer"
 
 const store = createStore(noteReducer)
-
+/*
 store.dispatch({
   type: "NEW_NOTE",
   payload: {
@@ -27,9 +27,27 @@ store.dispatch({
     id: 2
   }
 })
-
+*/
 const generateId = () => {
   Number((Math.random() * 1000000).toFixed)
+}
+
+const createNote = (content) => {
+  return {
+    type: "NEW_NOTE",
+    payload: {
+      content,
+      important: false,
+      id: generateId()
+    }
+  }
+}
+
+const toggleImportanceOf = (id) => {
+  return {
+    type: "TOGGLE_IMPORTANCE",
+    payload: { id }
+  }
 }
 
 const App = () => {
@@ -37,21 +55,11 @@ const App = () => {
     event.preventDefault()
     const content = event.target.note.value
     event.target.note.value = ""
-    store.dispatch({
-      type: "NEW_NOTE",
-      payload: {
-        content,
-        important: false,
-        id: generateId()
-      }
-    })
+    store.dispatch(createNote(content))
   }
 
   const toggleImportance = (id) => {
-    store.dispatch({
-      type: "TOGGLE_IMPORTANCE",
-      payload: { id }
-    })
+    store.dispatch(toggleImportanceOf(id))
   }
 
   return(
