@@ -1,8 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { addVotes, createAnecdote } from './reducers/anecdoteReducer'
+const _ = require("lodash")
 
 const App = () => {
   const anecdotes = useSelector(state => state)
+  const sortedAnecdotes = _.orderBy(anecdotes, "votes", "desc")
   const dispatch = useDispatch()
 
   const vote = (id) => {
@@ -19,7 +21,7 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {sortedAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
