@@ -34,7 +34,6 @@ const reducer = (state = initialState, action) => {
     case "CREATE_ANECDOTE":
       return state.concat(action.payload)
     default:
-      //console.log(state)
       return state
   }
 }
