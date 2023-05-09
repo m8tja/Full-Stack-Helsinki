@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { addVotes } from './reducers/anecdoteReducer'
-import NewAnecdote from './components/AnecdoteForm'
+import AnecdoteForm from './components/AnecdoteForm'
 const _ = require("lodash")
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <NewAnecdote />
+      <AnecdoteForm />
     </div>
   )
 }
