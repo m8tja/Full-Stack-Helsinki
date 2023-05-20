@@ -5,7 +5,9 @@ const _ = require("lodash")
 const AnecdoteList = () => {  
 
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(({ filter, anecdotes }) => {
+    return anecdotes.filter(a => a.content.toLowerCase().includes(filter))
+  })
   const sortedAnecdotes = _.orderBy(anecdotes, "votes", "desc")
 
   const vote = (id) => {
